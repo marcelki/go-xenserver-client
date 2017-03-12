@@ -1,13 +1,12 @@
-package client
+package xen
 
 import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
 )
 
-type VDI XenAPIObject
+type VDI APIObject
 
 type VDIType int
 
@@ -189,13 +188,9 @@ func (self *VDI) Unexpose() (err error) {
 	args := make(map[string]string)
 	args["vdi_uuid"] = disk_uuid
 
-	result, err := host.CallPlugin("transfer", "unexpose", args)
-
+	_, err = host.CallPlugin("transfer", "unexpose", args)
 	if err != nil {
 		return err
 	}
-
-	log.Println(fmt.Sprintf("Unexpose result: %s", result))
-
 	return nil
 }

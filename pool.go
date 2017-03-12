@@ -1,10 +1,10 @@
-package client
+package xen
 
 import (
 	"github.com/nilshell/xmlrpc"
 )
 
-type Pool XenAPIObject
+type Pool APIObject
 
 func (self *Pool) GetMaster() (host *Host, err error) {
 	result := APIResult{}

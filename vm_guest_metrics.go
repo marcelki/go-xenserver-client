@@ -1,10 +1,10 @@
-package client
+package xen
 
 import (
 	"github.com/nilshell/xmlrpc"
 )
 
-type VM_Guest_Metrics XenAPIObject
+type VM_Guest_Metrics APIObject
 
 func (self *VM_Guest_Metrics) GetNetworks() (ipMap map[string]string, err error) {
 	ipMap = make(map[string]string, 0)

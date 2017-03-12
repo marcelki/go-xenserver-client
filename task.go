@@ -1,4 +1,4 @@
-package client
+package xen
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type Task XenAPIObject
+type Task APIObject
 
 type TaskStatusType int
 
@@ -53,7 +53,7 @@ func (self *Task) GetProgress() (progress float64, err error) {
 	return
 }
 
-func (self *Task) GetResult() (object *XenAPIObject, err error) {
+func (self *Task) GetResult() (object *APIObject, err error) {
 	result := APIResult{}
 	err = self.Client.APICall(&result, "task.get_result", self.Ref)
 	if err != nil {
@@ -68,7 +68,7 @@ func (self *Task) GetResult() (object *XenAPIObject, err error) {
 		if match == nil {
 			object = nil
 		} else {
-			object = &XenAPIObject{
+			object = &APIObject{
 				Ref:    match[1],
 				Client: self.Client,
 			}

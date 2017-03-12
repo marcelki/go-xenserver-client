@@ -1,10 +1,10 @@
-package client
+package xen
 
 import (
 	"github.com/nilshell/xmlrpc"
 )
 
-type Network XenAPIObject
+type Network APIObject
 
 func (self *Network) GetAssignedIPs() (ipMap map[string]string, err error) {
 	ipMap = make(map[string]string, 0)

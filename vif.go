@@ -1,6 +1,6 @@
-package client
+package xen
 
-type VIF XenAPIObject
+type VIF APIObject
 
 func (self *VIF) Destroy() (err error) {
 	result := APIResult{}

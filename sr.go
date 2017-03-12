@@ -1,11 +1,11 @@
-package client
+package xen
 
 import (
 	"fmt"
 	"github.com/nilshell/xmlrpc"
 )
 
-type SR XenAPIObject
+type SR APIObject
 
 func (self *SR) GetUuid() (uuid string, err error) {
 	result := APIResult{}

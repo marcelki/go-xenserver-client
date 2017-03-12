@@ -1,10 +1,10 @@
-package client
+package xen
 
 import (
 	"github.com/nilshell/xmlrpc"
 )
 
-type VBD XenAPIObject
+type VBD APIObject
 
 func (self *VBD) GetRecord() (record map[string]interface{}, err error) {
 	record = make(map[string]interface{})

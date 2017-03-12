@@ -1,10 +1,10 @@
-package client
+package xen
 
 import (
 	"github.com/nilshell/xmlrpc"
 )
 
-type PIF XenAPIObject
+type PIF APIObject
 
 func (self *PIF) GetRecord() (record map[string]interface{}, err error) {
 	record = make(map[string]interface{})

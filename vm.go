@@ -1,4 +1,4 @@
-package client
+package xen
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-type VM XenAPIObject
+type VM APIObject
 
 func (self *VM) Clone(name_label string) (new_instance *VM, err error) {
 	new_instance = new(VM)
@@ -406,7 +406,7 @@ func (self *VM) SetStaticMemoryRange(min, max uint64) (err error) {
 	return
 }
 
-func (self *VM) ConnectVdi(vdi *VDI, vdiType VDIType, userdevice string) (err error) {
+func (self *VM) ConnectVdi(vdi *VDI, vdiType VDIType, bootable bool, userdevice string) (err error) {
 
 	// 1. Create a VBD
 	if userdevice == "" {
@@ -425,30 +425,27 @@ func (self *VM) ConnectVdi(vdi *VDI, vdiType VDIType, userdevice string) (err er
 	switch vdiType {
 	case CD:
 		vbd_rec["mode"] = "RO"
-		vbd_rec["bootable"] = true
+		vbd_rec["bootable"] = bootable
 		vbd_rec["unpluggable"] = false
 		vbd_rec["type"] = "CD"
 	case Disk:
 		vbd_rec["mode"] = "RW"
-		vbd_rec["bootable"] = false
+		vbd_rec["bootable"] = bootable
 		vbd_rec["unpluggable"] = false
 		vbd_rec["type"] = "Disk"
 	case Floppy:
 		vbd_rec["mode"] = "RW"
-		vbd_rec["bootable"] = false
+		vbd_rec["bootable"] = bootable
 		vbd_rec["unpluggable"] = true
 		vbd_rec["type"] = "Floppy"
 	}
 
 	result := APIResult{}
 	err = self.Client.APICall(&result, "VBD.create", vbd_rec)
-
 	if err != nil {
 		return err
 	}
-
 	vbd_ref := result.Value.(string)
-
 	result = APIResult{}
 	err = self.Client.APICall(&result, "VBD.get_uuid", vbd_ref)
 

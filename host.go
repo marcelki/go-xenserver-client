@@ -1,10 +1,10 @@
-package client
+package xen
 
 import (
 	"github.com/nilshell/xmlrpc"
 )
 
-type Host XenAPIObject
+type Host APIObject
 
 func (self *Host) CallPlugin(plugin, method string, params map[string]string) (response string, err error) {
 	result := APIResult{}
