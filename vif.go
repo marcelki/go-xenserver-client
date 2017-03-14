@@ -2,26 +2,19 @@ package xen
 
 type VIF APIObject
 
-func (self *VIF) Destroy() (err error) {
+func (self *VIF) Destroy() error {
 	result := APIResult{}
-	err = self.Client.APICall(&result, "VIF.destroy", self.Ref)
-	if err != nil {
-		return err
-	}
-	return nil
+	return self.Client.APICall(&result, "VIF.destroy", self.Ref)
 }
 
-func (self *VIF) GetNetwork() (network *Network, err error) {
-
-	network = new(Network)
+func (self *VIF) GetNetwork() (*Network, error) {
+	network := new(Network)
 	result := APIResult{}
-	err = self.Client.APICall(&result, "VIF.get_network", self.Ref)
-
+	err := self.Client.APICall(&result, "VIF.get_network", self.Ref)
 	if err != nil {
 		return nil, err
 	}
 	network.Ref = result.Value.(string)
 	network.Client = self.Client
-	return
-
+	return network, nil
 }
