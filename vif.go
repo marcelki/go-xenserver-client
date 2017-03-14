@@ -18,3 +18,12 @@ func (self *VIF) GetNetwork() (*Network, error) {
 	network.Client = self.Client
 	return network, nil
 }
+
+func (self *VIF) GetMAC() (string, error) {
+	result := APIResult{}
+	err := self.Client.APICall(&result, "VIF.get_MAC", self.Ref)
+	if err != nil {
+		return "", err
+	}
+	return result.Value.(string), nil
+}
