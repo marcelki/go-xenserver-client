@@ -171,7 +171,6 @@ func (self *VM) GetHVMBootPolicy() (bootOrder string, err error) {
 	if err != nil {
 		return "", err
 	}
-	bootOrder = ""
 	if result.Value != nil {
 		bootOrder = result.Value.(string)
 	}
@@ -179,20 +178,29 @@ func (self *VM) GetHVMBootPolicy() (bootOrder string, err error) {
 	return bootOrder, nil
 }
 
-func (self *VM) SetHVMBoot(policy, bootOrder string) (err error) {
+func (self *VM) GetHVMBootParams() (bootOrder string, err error) {
 	result := APIResult{}
-	err = self.Client.APICall(&result, "VM.set_HVM_boot_policy", self.Ref, policy)
+	err = self.Client.APICall(&result, "VM.get_HVM_boot_params", self.Ref)
 	if err != nil {
-		return err
+		return "", err
 	}
-	result = APIResult{}
+	if result.Value != nil {
+		bootOrder = result.Value.(string)
+	}
+
+	return bootOrder, nil
+}
+
+func (self *VM) SetHVMBootPolicy(policy string) (err error) {
+	result := APIResult{}
+	return self.Client.APICall(&result, "VM.set_HVM_boot_policy", self.Ref, policy)
+}
+
+func (self *VM) SetHVMBootOrder(bootOrder string) (err error) {
+	result := APIResult{}
 	params := make(xmlrpc.Struct)
 	params["order"] = bootOrder
-	err = self.Client.APICall(&result, "VM.set_HVM_boot_params", self.Ref, params)
-	if err != nil {
-		return err
-	}
-	return
+	return self.Client.APICall(&result, "VM.set_HVM_boot_params", self.Ref, params)
 }
 
 func (self *VM) SetPVBootloader(pv_bootloader, pv_args string) (err error) {
