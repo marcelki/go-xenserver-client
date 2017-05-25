@@ -191,6 +191,11 @@ func (self *VM) GetHVMBootParams() (bootOrder string, err error) {
 	return bootOrder, nil
 }
 
+func (self *VM) SetTags(tags string) (err error) {
+	result := APIResult{}
+	return self.Client.APICall(&result, "VM.add_tags", self.Ref, tags)
+}
+
 func (self *VM) SetHVMBootPolicy(policy string) (err error) {
 	result := APIResult{}
 	return self.Client.APICall(&result, "VM.set_HVM_boot_policy", self.Ref, policy)
