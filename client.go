@@ -27,6 +27,14 @@ type APIObject struct {
 	Client *Client
 }
 
+type SlaveError struct {
+	Master string
+}
+
+func (se SlaveError) Error() string {
+	return fmt.Sprintf("Host is slave. Use master: %s", se.Master)
+}
+
 func (c *Client) RPCCall(result interface{}, method string, params []interface{}) (err error) {
 	p := new(xmlrpc.Params)
 	p.Params = params
@@ -42,14 +50,25 @@ func (c *Client) Login() (err error) {
 	params[1] = c.Password
 
 	err = c.RPCCall(&result, "session.login_with_password", params)
-	if err == nil {
-		// err might not be set properly, so check the reference
-		if result["Value"] == nil {
-			return errors.New("Invalid credentials supplied")
+	if err != nil {
+		return err
+	}
+	if result["Status"] == "Failure" {
+		errorDescription := result["ErrorDescription"]
+		errorInterface := errorDescription.([]interface{})
+		if len(errorInterface) == 2 {
+			if errorInterface[0] == "HOST_IS_SLAVE" {
+				errorString := errorInterface[1].(string)
+				return SlaveError{errorString}
+			}
 		}
+		return errors.New("unknown error from peer")
+	}
+	if result["Value"] == nil {
+		return errors.New("Invalid credentials supplied")
 	}
 	c.Session = result["Value"]
-	return err
+	return nil
 }
 
 func (c *Client) APICall(result *APIResult, method string, params ...interface{}) (err error) {
