@@ -27,3 +27,25 @@ func (self *VIF) GetMAC() (string, error) {
 	}
 	return result.Value.(string), nil
 }
+
+func (self *VIF) GetDevice() (string, error) {
+	result := APIResult{}
+	err := self.Client.APICall(&result, "VIF.get_device", self.Ref)
+	if err != nil {
+		return "", err
+	}
+	return result.Value.(string), nil
+}
+
+func (self *VIF) GetIPv4Addresses() (addresses []string, err error) {
+	result := APIResult{}
+	err = self.Client.APICall(&result, "VIF.get_ipv4_addresses", self.Ref)
+	if err != nil {
+		return nil, err
+	}
+	for _, elem := range result.Value.([]interface{}) {
+		address := elem.(string)
+		addresses = append(addresses, address)
+	}
+	return addresses, nil
+}

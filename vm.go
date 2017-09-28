@@ -408,6 +408,70 @@ func (self *VM) GetGuestMetrics() (metrics map[string]interface{}, err error) {
 	return result.Value.(xmlrpc.Struct), nil
 }
 
+func (self *VM) GetVMMetricsRef() (ref string, err error) {
+	result := APIResult{}
+	err = self.Client.APICall(&result, "VM.get_metrics", self.Ref)
+	if err != nil {
+		return "", nil
+	}
+	ref = result.Value.(string)
+	return ref, err
+}
+
+func (self *VM) GetVMMetrics() (vm_metrics *VM_Metrics, err error) {
+	result := APIResult{}
+	err = self.Client.APICall(&result, "VM.get_metrics", self.Ref)
+	if err != nil {
+		return nil, nil
+	}
+
+	vm_metrics = new(VM_Metrics)
+	vm_metrics.Ref = result.Value.(string)
+	vm_metrics.Client = self.Client
+	return vm_metrics, err
+}
+
+func (self *VM) GetMemoryActual() (string, error) {
+	metrics_ref, err := self.GetVMMetricsRef()
+	if err != nil {
+		return "", err
+	}
+	if metrics_ref == "OpaqueRef:NULL" {
+		return "", nil
+	}
+	result := APIResult{}
+	err = self.Client.APICall(&result, "VM_metrics.get_memory_actual", metrics_ref)
+	if err != nil {
+		return "", err
+	}
+	return result.Value.(string), nil
+}
+
+func (self *VM) GetMemoryStaticMax() (string, error) {
+	result := APIResult{}
+	err := self.Client.APICall(&result, "VM.get_memory_static_max", self.Ref)
+	if err != nil {
+		return "", err
+	}
+	return result.Value.(string), nil
+}
+
+func (self *VM) GetVCpuNumber() (string, error) {
+	metrics_ref, err := self.GetVMMetricsRef()
+	if err != nil {
+		return "", err
+	}
+	if metrics_ref == "OpaqueRef:NULL" {
+		return "", nil
+	}
+	result := APIResult{}
+	err = self.Client.APICall(&result, "VM_metrics.get_VCPUs_number", metrics_ref)
+	if err != nil {
+		return "", err
+	}
+	return result.Value.(string), nil
+}
+
 func (self *VM) SetStaticMemoryRange(min, max uint64) (err error) {
 	result := APIResult{}
 	strMin := fmt.Sprintf("%d", min)

@@ -17,6 +17,15 @@ func (self *SR) GetUuid() (uuid string, err error) {
 	return uuid, nil
 }
 
+func (self *SR) GetName() (name string, err error) {
+	result := APIResult{}
+	err = self.Client.APICall(&result, "SR.get_name_label", self.Ref)
+	if err != nil {
+		return "", err
+	}
+	return result.Value.(string), nil
+}
+
 func (self *SR) CreateVdi(name_label string, size int64) (vdi *VDI, err error) {
 	vdi = new(VDI)
 

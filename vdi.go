@@ -27,6 +27,17 @@ func (self *VDI) GetUuid() (vdi_uuid string, err error) {
 	return vdi_uuid, nil
 }
 
+func (self *VDI) GetSR() (sr *SR, err error) {
+	result := APIResult{}
+	err = self.Client.APICall(&result, "VDI.get_SR", self.Ref)
+	if err != nil {
+		return nil, err
+	}
+	sr.Ref = result.Value.(string)
+	sr.Client = self.Client
+	return sr, nil
+}
+
 func (self *VDI) GetVBDs() (vbds []VBD, err error) {
 	vbds = make([]VBD, 0)
 	result := APIResult{}
