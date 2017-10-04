@@ -27,11 +27,11 @@ func (self *VDI) GetUuid() (vdi_uuid string, err error) {
 	return vdi_uuid, nil
 }
 
-func (self *VDI) GetSR() (sr *SR, err error) {
+func (self *VDI) GetSR() (sr SR, err error) {
 	result := APIResult{}
 	err = self.Client.APICall(&result, "VDI.get_SR", self.Ref)
 	if err != nil {
-		return nil, err
+		return sr, err
 	}
 	sr.Ref = result.Value.(string)
 	sr.Client = self.Client
