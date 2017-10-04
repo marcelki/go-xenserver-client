@@ -456,16 +456,9 @@ func (self *VM) GetMemoryStaticMax() (string, error) {
 	return result.Value.(string), nil
 }
 
-func (self *VM) GetVCpuNumber() (string, error) {
-	metrics_ref, err := self.GetVMMetricsRef()
-	if err != nil {
-		return "", err
-	}
-	if metrics_ref == "OpaqueRef:NULL" {
-		return "", nil
-	}
+func (self *VM) GetVCpuMax() (string, error) {
 	result := APIResult{}
-	err = self.Client.APICall(&result, "VM_metrics.get_VCPUs_number", metrics_ref)
+	err := self.Client.APICall(&result, "VM.get_VCPUs_max", self.Ref)
 	if err != nil {
 		return "", err
 	}
