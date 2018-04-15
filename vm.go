@@ -232,6 +232,19 @@ func (self *VM) GetDomainId() (domid string, err error) {
 	return domid, nil
 }
 
+func (self *VM) GetTags() ([]string, error) {
+	tags := make([]string, 0)
+	result := APIResult{}
+	err := self.Client.APICall(&result, "VM.get_tags", self.Ref)
+	if err != nil {
+		return nil, err
+	}
+	for _, tag := range result.Value.([]interface{}) {
+		tags = append(tags, tag.(string))
+	}
+	return tags, nil
+}
+
 func (self *VM) GetResidentOn() (host *Host, err error) {
 	result := APIResult{}
 	err = self.Client.APICall(&result, "VM.get_resident_on", self.Ref)
